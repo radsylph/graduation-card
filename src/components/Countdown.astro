@@ -1,0 +1,110 @@
+---
+interface Props {
+    date: string;
+}
+
+const { date } = Astro.props;
+---
+
+<section class="countdown card" data-countdown data-date={date}>
+    <h2>Cuenta regresiva</h2>
+    <ul class="countdown__units">
+        <li class="countdown__unit">
+            <span class="countdown__number" data-unit="days">0</span>
+            <span class="countdown__label">Días</span>
+        </li>
+        <li class="countdown__unit">
+            <span class="countdown__number" data-unit="hours">00</span>
+            <span class="countdown__label">Horas</span>
+        </li>
+        <li class="countdown__unit">
+            <span class="countdown__number" data-unit="minutes">00</span>
+            <span class="countdown__label">Minutos</span>
+        </li>
+        <li class="countdown__unit">
+            <span class="countdown__number" data-unit="seconds">00</span>
+            <span class="countdown__label">Segundos</span>
+        </li>
+    </ul>
+    <p class="countdown__finished" data-finished hidden>El día ha llegado.</p>
+</section>
+
+<style>
+    .countdown {
+        width: 100%;
+        max-width: 680px;
+        padding: clamp(1.5rem, 4vw, 2.5rem);
+        text-align: center;
+    }
+
+    .countdown h2 {
+        margin: 0 0 1.25rem;
+        color: var(--color-gold);
+        font-family: var(--font-display);
+    }
+
+    .countdown__units {
+        display: flex;
+        justify-content: center;
+        gap: clamp(1rem, 4vw, 2rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .countdown__number {
+        display: block;
+        color: var(--color-cream);
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 7vw, 3rem);
+        line-height: 1;
+    }
+
+    .countdown__label {
+        display: block;
+        margin-top: 0.4rem;
+        color: var(--color-crimson);
+        font-size: 0.8rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+
+    .countdown__finished {
+        margin: 0;
+        color: var(--color-gold);
+        font-size: 1.4rem;
+    }
+</style>
+
+<script>
+    const root = document.querySelector<HTMLElement>("[data-countdown]");
+    if (root) {
+        const target = new Date(root.dataset.date ?? "").getTime();
+        const days = root.querySelector<HTMLElement>('[data-unit="days"]');
+        const hours = root.querySelector<HTMLElement>('[data-unit="hours"]');
+        const minutes = root.querySelector<HTMLElement>('[data-unit="minutes"]');
+        const seconds = root.querySelector<HTMLElement>('[data-unit="seconds"]');
+        const units = root.querySelector<HTMLElement>(".countdown__units");
+        const finished = root.querySelector<HTMLElement>("[data-finished]");
+
+        const pad = (value: number) => String(value).padStart(2, "0");
+
+        const tick = () => {
+            const diff = target - Date.now();
+
+            if (diff <= 0) {
+                units?.setAttribute("hidden", "");
+                finished?.removeAttribute("hidden");
+                return;
+            }
+
+            if (days) days.textContent = String(Math.floor(diff / 86_400_000));
+            if (hours) hours.textContent = pad(Math.floor(diff / 3_600_000) % 24);
+            if (minutes) minutes.textContent = pad(Math.floor(diff / 60_000) % 60);
+            if (seconds) seconds.textContent = pad(Math.floor(diff / 1_000) % 60);
+        };
+
+        tick();
+        window.setInterval(tick, 1000);
+    }
+</script>

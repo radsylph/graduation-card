@@ -1,0 +1,170 @@
+---
+---
+
+<section class="rsvp card" aria-labelledby="rsvp-heading">
+    <h2 id="rsvp-heading">Confirmar asistencia</h2>
+    <p class="rsvp__intro">Por favor, confirma tu asistencia.</p>
+
+    <form class="rsvp__form" data-rsvp-form>
+        <label class="field">
+            <span class="field__label">Nombre</span>
+            <input
+                class="field__input"
+                type="text"
+                name="name"
+                required
+                autocomplete="name"
+                data-guest-input
+            />
+        </label>
+
+        <label class="field">
+            <span class="field__label">Correo electrónico</span>
+            <input
+                class="field__input"
+                type="email"
+                name="email"
+                required
+                autocomplete="email"
+            />
+        </label>
+
+        <fieldset class="field">
+            <legend class="field__label">¿Asistirás?</legend>
+            <label class="choice">
+                <input type="radio" name="attending" value="yes" required />
+                <span>Asistiré con gusto</span>
+            </label>
+            <label class="choice">
+                <input type="radio" name="attending" value="no" required />
+                <span>Lamentablemente no podré asistir</span>
+            </label>
+        </fieldset>
+
+        <button class="rsvp__submit" type="submit">Enviar confirmación</button>
+
+        <p class="rsvp__confirmation" data-confirmation hidden role="status"></p>
+    </form>
+</section>
+
+<style>
+    .rsvp {
+        max-width: 680px;
+        margin: 3rem auto 0;
+        padding: clamp(1.5rem, 4vw, 2.5rem);
+    }
+
+    .rsvp h2 {
+        margin: 0 0 0.25rem;
+        color: var(--color-gold);
+        font-family: var(--font-display);
+    }
+
+    .rsvp__intro {
+        margin: 0 0 1.5rem;
+        color: var(--color-cream);
+    }
+
+    .rsvp__form {
+        display: grid;
+        gap: 1.25rem;
+    }
+
+    .field {
+        display: grid;
+        gap: 0.4rem;
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+
+    .field__label {
+        color: var(--color-crimson);
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .field__input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.7rem 0.9rem;
+        background: var(--color-canvas);
+        color: var(--color-cream);
+        border: 1px solid #4a4a4a;
+        border-radius: 4px;
+        font: inherit;
+    }
+
+    .field__input:focus-visible {
+        outline: 2px solid var(--color-gold);
+        outline-offset: 1px;
+        border-color: transparent;
+    }
+
+    .choice {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        color: var(--color-cream);
+        cursor: pointer;
+    }
+
+    .choice input {
+        accent-color: var(--color-velvet);
+    }
+
+    .rsvp__submit {
+        justify-self: start;
+        padding: 0.8rem 1.6rem;
+        background: var(--color-velvet);
+        color: var(--color-cream);
+        border: 0;
+        border-radius: 4px;
+        font-family: var(--font-display);
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .rsvp__submit:hover {
+        background: var(--color-crimson);
+    }
+
+    .rsvp__submit:focus-visible {
+        outline: 2px solid var(--color-gold);
+        outline-offset: 2px;
+    }
+
+    .rsvp__confirmation {
+        margin: 0;
+        color: var(--color-gold);
+    }
+</style>
+
+<script>
+    const form = document.querySelector<HTMLFormElement>("[data-rsvp-form]");
+    if (form) {
+        const confirmation = form.querySelector<HTMLElement>("[data-confirmation]");
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const name = String(new FormData(form).get("name") ?? "").trim();
+
+            if (confirmation) {
+                confirmation.textContent = name
+                    ? `¡Gracias, ${name}! Tu respuesta ha quedado registrada.`
+                    : "¡Gracias! Tu respuesta ha quedado registrada.";
+                confirmation.removeAttribute("hidden");
+            }
+
+            form.reset();
+        });
+    }
+</script>

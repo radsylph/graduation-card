@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/* Cross-document view transitions: in supporting browsers, navigations
+   between pages crossfade (e.g. the wine screen on / melts into the wine
+   hero on /invitation) instead of hard-cutting to the new document. */
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+        navigation: auto;
+    }
+}
+
+:root {
+    --color-canvas: #0e0e0e;
+    --color-card: #2e2e2e;
+    --color-parchment: #f7efe2;
+    --color-cream: #f7efe2;
+    --color-gold: #c09d3e;
+    --color-crimson: #a61f1f;
+    --color-velvet: #7a1212;
+    --color-wine: #450513;
+
+    --font-display: "Cinzel", "Times New Roman", serif;
+    --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+}
+
+.card {
+    background: var(--color-card);
+    color: var(--color-cream);
+    border-radius: 6px;
+}
