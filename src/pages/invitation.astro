@@ -4,7 +4,6 @@ import InvitationCard from "../components/InvitationCard.astro";
 import Countdown from "../components/Countdown.astro";
 import RsvpForm from "../components/RsvpForm.astro";
 
-// TODO: confirm the ceremony time once the venue details are finalized.
 const EVENT_DATE = "2026-10-10T18:00:00-04:00";
 
 const event = new Date(EVENT_DATE);
@@ -16,6 +15,10 @@ const displayDate = new Intl.DateTimeFormat("es", {
 }).format(event);
 ---
 
+<div
+    class="backdrop pointer-events-none z-2 bg-wine opacity-0"
+    aria-hidden="true"
+></div>
 <Layout title="Judith — Invitación de graduación">
     <link slot="head" rel="preconnect" href="https://fonts.googleapis.com" />
     <link
@@ -30,29 +33,34 @@ const displayDate = new Intl.DateTimeFormat("es", {
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap"
     />
 
-    <main class="invitation">
-        <section class="hero">
+    <main class="min-h-screen bg-parchment p-[clamp(1.5rem,5vw,4rem)_clamp(1rem,4vw,3rem)] font-serif text-cream">
+        <section class="-mt-[clamp(1.5rem,5vw,4rem)] -mx-[clamp(1rem,4vw,3rem)] grid gap-8 justify-items-center bg-white px-[clamp(1rem,4vw,3rem)] py-[clamp(2.5rem,6vw,4rem)]">
             <InvitationCard displayDate={displayDate} />
             <Countdown date={EVENT_DATE} />
         </section>
 
-        <section class="location card" aria-labelledby="location-heading">
-            <h2 id="location-heading">Ubicación</h2>
-            <div class="location__grid">
-                <!-- TODO: replace with the real venue address. -->
+        <section
+            class="card mx-auto mt-12 max-w-240 p-[clamp(1.5rem,4vw,2.5rem)]"
+            aria-labelledby="location-heading"
+        >
+            <h2 id="location-heading" class="mb-5 font-display text-gold">
+                Ubicación
+            </h2>
+            <div class="grid gap-6 md:grid-cols-1">
                 <iframe
-                    class="location__map"
-                    title="Mapa de la ubicación del evento"
-                    src="https://www.google.com/maps?q=New%20York%2C%20NY&output=embed"
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                    allowfullscreen
+                    src="https://snazzymaps.com/embed/813005"
+                    width="100%"
+                    height="400px"
+                    style="border:none;"
                 ></iframe>
-                <div class="location__text">
-                    <h3>Nombre del lugar</h3>
-                    <p>Avenida Ejemplo 123</p>
-                    <p>New York, NY 10001</p>
-                    <p class="location__note">Detalles por confirmar.</p>
+                <div>
+                    <h3 class="mb-2 font-display text-crimson">
+                        Casa de Judith
+                    </h3>
+                    <p class="my-[0.15rem] text-black">
+                        Conjunto Residencial Bahía Del Lago, Villa 1.
+                    </p>
+                    <p class="my-[0.15rem] text-black">casa 15</p>
                 </div>
             </div>
         </section>
@@ -62,82 +70,87 @@ const displayDate = new Intl.DateTimeFormat("es", {
 </Layout>
 
 <style>
-    .invitation {
-        --padding-block: clamp(1.5rem, 5vw, 4rem);
-        --padding-inline: clamp(1rem, 4vw, 3rem);
-        min-height: 100vh;
-        background: var(--color-canvas);
-        color: var(--color-cream);
-        font-family: var(--font-serif);
-        padding: var(--padding-block) var(--padding-inline);
+    /* Vintage/sepia tint for the embedded map, matching the parchment theme.
+       CSS filters apply to the iframe's rendered content from outside (we can't
+       restyle the map's internal elements directly through the iframe). */
+    .map-embed {
+        filter: sepia(0.55) saturate(1.2) hue-rotate(330deg) contrast(1.02)
+            brightness(1.02);
     }
 
-    /* Full-bleed wine band: the negative margins cancel the page padding so
-       this section runs edge-to-edge and touches the top of the page — the
-       same color the visitor was looking at when the envelope zoom finished
-       on the welcome page. */
-    .hero {
-        display: grid;
-        gap: 2rem;
-        justify-items: center;
-        margin-block-start: calc(-1 * var(--padding-block));
-        margin-inline: calc(-1 * var(--padding-inline));
-        padding: clamp(2.5rem, 6vw, 4rem) var(--padding-inline);
-        background: var(--color-wine);
+    /* The splash is a huge circle (side = 100vmax covers any viewport) centered
+       on screen, so it always stays a perfect ball while it spins and collapses.
+       It's centered with negative margins (not margin:auto) because the element
+       is larger than the viewport and auto-centering fails on oversized boxes. */
+    .backdrop {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 100vmax;
+        aspect-ratio: 1;
+        margin: -50vmax 0 0 -50vmax;
+        pointer-events: none;
+        transform-origin: 50% 50%;
     }
 
-    .location {
-        max-width: 960px;
-        margin: 3rem auto 0;
-        padding: clamp(1.5rem, 4vw, 2.5rem);
+    .backdrop.is-shrinking {
+        /* 0.4s delay keeps the full-screen splash visible before it collapses. */
+        animation: backdrop-shrink-out 1.2s cubic-bezier(0.7, 0, 0.3, 1) 0.4s
+            both;
     }
 
-    .location h2 {
-        margin: 0 0 1.25rem;
-        color: var(--color-gold);
-        font-family: var(--font-display);
-    }
+    @keyframes backdrop-shrink-out {
+        0% {
+            opacity: 1;
+            /*border-radius: 50%;*/
+            transform: scale(1) rotate(0deg);
+        }
 
-    .location__grid {
-        display: grid;
-        gap: 1.5rem;
-    }
+        45% {
+            opacity: 1;
+            transform: scale(0.35) rotate(240deg);
+            border-radius: 25%;
+        }
 
-    @media (min-width: 720px) {
-        .location__grid {
-            grid-template-columns: 1fr 1fr;
-            align-items: stretch;
+        80% {
+            opacity: 1;
+            transform: scale(0.05) rotate(360deg);
+            border-radius: 50%;
+        }
+
+        100% {
+            opacity: 0;
+            transform: scale(0.001) rotate(420deg);
+            border-radius: 80%;
         }
     }
 
-    .location__map {
-        width: 100%;
-        min-height: 280px;
-        border: 0;
-        filter: grayscale(1) contrast(1.05);
-    }
-
-    .location__text h3 {
-        margin: 0 0 0.5rem;
-        color: var(--color-crimson);
-        font-family: var(--font-display);
-    }
-
-    .location__text p {
-        margin: 0.15rem 0;
-        color: var(--color-cream);
-    }
-
-    .location__note {
-        margin-top: 1rem;
-        font-style: italic;
-        color: var(--color-gold);
+    @media (prefers-reduced-motion: reduce) {
+        .backdrop {
+            animation: none;
+        }
     }
 </style>
 
 <script>
-    // Personalize the invitation from a `?guest=Jane` query parameter. The
-    // value is rendered as plain text and pre-fills the RSVP name field.
+    const backdrop = document.querySelector<HTMLElement>(".backdrop");
+    const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (backdrop && !reducedMotion) {
+        window.addEventListener("pageshow", (event) => {
+            if (!event.persisted) return;
+            backdrop.classList.remove("is-shrinking");
+            void backdrop.offsetWidth;
+            backdrop.classList.add("is-shrinking");
+        });
+
+        requestAnimationFrame(() => backdrop.classList.add("is-shrinking"));
+    }
+</script>
+
+<script>
     const params = new URLSearchParams(window.location.search);
     const guest = (params.get("guest") ?? "").trim().slice(0, 80);
 
