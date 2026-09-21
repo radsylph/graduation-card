@@ -9,7 +9,7 @@
     }
 }
 
-:root {
+@theme {
     --color-canvas: #0e0e0e;
     --color-card: #2e2e2e;
     --color-parchment: #f7efe2;
@@ -24,7 +24,8 @@
 }
 
 .card {
-    background: var(--color-card);
+    background: var(--color-parchment);
     color: var(--color-cream);
     border-radius: 6px;
+    border: 2px solid #c09d3e;
 }
