@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@astroanimate/core':
+        specifier: ^0.1.2
+        version: 0.1.2(astro@7.3.3(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(jiti@2.7.0))
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.3.0(esbuild@0.28.2)(jiti@2.7.0))
@@ -19,6 +22,11 @@ importers:
         version: 4.3.3
 
 packages:
+
+  '@astroanimate/core@0.1.2':
+    resolution: {integrity: sha512-cu1ytAp8ZPelcxnZlRavNfNrLn60DoQSUBqUzWLJr9b5n5gP/prNNb5MuH7LWK+Y5i2SZF31ptjfJroTy6il/A==}
+    peerDependencies:
+      astro: ^4.0.0 || ^5.0.0 || ^6.0.0
 
   '@astrojs/compiler-binding-android-arm64@0.4.1':
     resolution: {integrity: sha512-Wtx2DZORuNTLASLLZ8hlrjFaJe1LUloatcCn9EPq7knBhRpjMGXeJANIJMeBZG4igvz7x+3nyAJM2iwCSW9xog==}
@@ -1592,6 +1600,10 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
 snapshots:
+
+  '@astroanimate/core@0.1.2(astro@7.3.3(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(jiti@2.7.0))':
+    dependencies:
+      astro: 7.3.3(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(jiti@2.7.0)
 
   '@astrojs/compiler-binding-android-arm64@0.4.1':
     optional: true
