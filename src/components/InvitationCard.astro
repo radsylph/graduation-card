@@ -1,10 +1,7 @@
 ---
-import Envelope1 from "../assets/EnvelopeOpening1.svg";
-import Envelope2 from "../assets/EnvelopeOpening2.svg";
-import Envelope3 from "../assets/EnvelopeOpening3.svg";
-import Envelope4 from "../assets/EnvelopeOpening4.svg";
 import EnvelopeGif from "../assets/test.gif";
 import waxSeal from "../assets/waxSeal.svg";
+import judith from "../assets/JudithPhoto.png";
 
 interface Props {
     displayDate: string;
@@ -16,22 +13,13 @@ const { displayDate } = Astro.props;
 <img src={EnvelopeGif.src} alt="" />
 <article class="relative mx-auto max-w-170 border-2 border-gold bg-parchment p-[clamp(1.5rem,5vw,3.25rem)] text-center text-canvas before:pointer-events-none before:absolute before:inset-2.5 before:content-[''] before:border before:border-gold">
     <div class="relative grid justify-items-center gap-5">
-        <p class="text-[0.9rem] uppercase tracking-[0.35em] text-crimson">
-            Promoción 2026
-        </p>
-
-        <!-- <div
-            class="relative mx-auto w-[min(78%,300px)] aspect-357/441.75"
-            aria-hidden="true"
-        >
-        </div> -->
-
         <p class="text-[1.35rem] italic">
             Estimado/a <span data-guest-name>invitado/a</span>,
         </p>
         <p class="max-w-[34ch] text-[1.15rem] leading-[1.6]">
             Te invito coordialmente a celebrar junto a mi mi graduacion.
         </p>
+        <img src={judith.src} alt="" class="drop-shadow-xl drop-shadow-gold" />
         <p class="font-display text-[1.4rem] tracking-[0.08em] text-crimson">
             {displayDate}
         </p>
@@ -39,7 +27,6 @@ const { displayDate } = Astro.props;
             Horario: si - si
         </p>
     </div>
-
     <img
         class="absolute left-1/2 bottom-0 z-2 w-[clamp(52px,9vw,78px)] -translate-x-1/2 translate-y-[45%]"
         src={waxSeal.src}
