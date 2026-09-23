@@ -3,6 +3,8 @@ import Layout from "../layouts/Layout.astro";
 import InvitationCard from "../components/InvitationCard.astro";
 import Countdown from "../components/Countdown.astro";
 import RsvpForm from "../components/RsvpForm.astro";
+import DressCode from "../components/dressCode.astro";
+import FadeInText from "@astroanimate/core/FadeInText";
 
 const EVENT_DATE = "2026-10-10T18:00:00-04:00";
 
@@ -39,31 +41,35 @@ const displayDate = new Intl.DateTimeFormat("es", {
             <Countdown date={EVENT_DATE} />
         </section>
 
-        <section
-            class="card mx-auto mt-12 max-w-240 p-[clamp(1.5rem,4vw,2.5rem)]"
-            aria-labelledby="location-heading"
-        >
-            <h2 id="location-heading" class="mb-5 font-display text-gold">
-                Ubicación
-            </h2>
-            <div class="grid gap-6 md:grid-cols-1">
-                <iframe
-                    src="https://snazzymaps.com/embed/813005"
-                    width="100%"
-                    height="400px"
-                    style="border:none;"
-                ></iframe>
-                <div>
-                    <h3 class="mb-2 font-display text-crimson">
-                        Casa de Judith
-                    </h3>
-                    <p class="my-[0.15rem] text-black">
-                        Conjunto Residencial Bahía Del Lago, Villa 1.
-                    </p>
-                    <p class="my-[0.15rem] text-black">casa 15</p>
+        <FadeInText>
+            <section
+                class="card mx-auto mt-12 max-w-240 p-[clamp(1.5rem,4vw,2.5rem)]"
+                aria-labelledby="location-heading"
+            >
+                <h2 id="location-heading" class="mb-5 font-display text-gold">
+                    Ubicación
+                </h2>
+                <div class="grid gap-6 md:grid-cols-1">
+                    <iframe
+                        src="https://snazzymaps.com/embed/813005"
+                        width="100%"
+                        height="400px"
+                        style="border:none;"
+                    ></iframe>
+                    <div>
+                        <h3 class="mb-2 font-display text-crimson">
+                            Casa de Judith
+                        </h3>
+                        <p class="my-[0.15rem] text-black">
+                            Conjunto Residencial Bahía Del Lago, Villa 1.
+                        </p>
+                        <p class="my-[0.15rem] text-black">casa 15</p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </FadeInText>
+
+        <DressCode />
 
         <RsvpForm />
     </main>
