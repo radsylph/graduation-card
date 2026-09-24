@@ -5,6 +5,7 @@ import Countdown from "../components/Countdown.astro";
 import RsvpForm from "../components/RsvpForm.astro";
 import DressCode from "../components/dressCode.astro";
 import Location from "../components/Location.astro";
+import FadeInText from "@astroanimate/core/FadeInText";
 
 const EVENT_DATE = "2026-10-10T18:00:00-04:00";
 
@@ -36,18 +37,26 @@ const displayDate = new Intl.DateTimeFormat("es", {
     />
 
     <main class="min-h-screen bg-parchment p-[clamp(1.5rem,5vw,4rem)_clamp(1rem,4vw,3rem)] font-serif text-cream">
-        <section class="-mt-[clamp(1.5rem,5vw,4rem)] -mx-[clamp(1rem,4vw,3rem)] grid gap-8 justify-items-center bg-white px-[clamp(1rem,4vw,3rem)] py-[clamp(2.5rem,6vw,4rem)]">
-            <InvitationCard displayDate={displayDate} />
-            <Countdown date={EVENT_DATE} />
-        </section>
+        <FadeInText enhance duration={0.7} yOffset={30}>
+            <section class="-mt-[clamp(1.5rem,5vw,4rem)] -mx-[clamp(1rem,4vw,3rem)] grid gap-8 justify-items-center bg-white px-[clamp(1rem,4vw,3rem)] py-[clamp(2.5rem,6vw,4rem)]">
+                <InvitationCard displayDate={displayDate} />
+                <Countdown date={EVENT_DATE} />
+            </section>
+        </FadeInText>
 
-        <div class="relative mx-auto max-w-240">
-            <Location />
-        </div>
+        <FadeInText enhance duration={0.7} yOffset={30} delay={0.1}>
+            <div class="relative mx-auto max-w-240">
+                <Location />
+            </div>
+        </FadeInText>
 
-        <DressCode />
+        <FadeInText enhance duration={0.7} yOffset={30} delay={0.2}>
+            <DressCode />
+        </FadeInText>
 
-        <RsvpForm />
+        <FadeInText enhance duration={0.7} yOffset={30} delay={0.3}>
+            <RsvpForm />
+        </FadeInText>
     </main>
 </Layout>
 
