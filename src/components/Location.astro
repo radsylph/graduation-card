@@ -1,0 +1,44 @@
+---
+import butterFlies from "../assets/butterflies.svg";
+import roses from "../assets/Roses.svg";
+import whiteRose from "../assets/whiteRose.svg";
+import vines from "../assets/Vines1.svg";
+import vines2 from "../assets/Vines2.svg";
+import vines3 from "../assets/Vines3.svg";
+---
+
+<section
+    class="card relative mx-auto mt-12 max-w-240 p-[clamp(1.5rem,4vw,2.5rem)]"
+    aria-labelledby="location-heading"
+>
+    <h2 id="location-heading" class="mb-5 font-display text-gold">
+        Ubicación
+    </h2>
+    <div class="grid gap-6 md:grid-cols-1">
+        <iframe
+            src="https://snazzymaps.com/embed/813005"
+            width="100%"
+            height="400px"
+            style="border:none;"
+        ></iframe>
+        <div>
+            <h3 class="mb-2 font-display text-crimson">Casa de Judith</h3>
+            <p class="my-[0.15rem] text-black">
+                Conjunto Residencial Bahía Del Lago, Villa 1.
+            </p>
+            <p class="my-[0.15rem] text-black">casa 15</p>
+        </div>
+    </div>
+    <img
+        class="absolute top-0 right-0 z-2 w-30 md:w-60 translate-x-12 md:translate-x-25 -translate-y-5 md:-translate-y-6"
+        src={vines2.src}
+        alt="Vines1"
+        aria-hidden="true"
+    />
+    <!-- <img
+        class="absolute top-0 -right-10 z-2 w-60 md:w-80 -translate-y-5 md:-translate-y-6"
+        src={vines3.src}
+        alt="Vines3"
+        aria-hidden="true"
+    /> -->
+</section>
