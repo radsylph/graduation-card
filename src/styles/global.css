@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+:root {
+    color-scheme: light;
+}
+
 /* Cross-document view transitions: in supporting browsers, navigations
    between pages crossfade (e.g. the wine screen on / melts into the wine
    hero on /invitation) instead of hard-cutting to the new document. */
