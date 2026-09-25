@@ -10,7 +10,7 @@
     </h2>
     <p class="mb-6 text-cream">Por favor, confirma tu asistencia.</p>
 
-    <form class="grid gap-5 justify-center" data-rsvp-form>
+    <form class="grid gap-5 justify-center" data-rsvp-form novalidate>
         <label class="grid gap-[0.4rem]">
             <span class="text-[0.85rem] uppercase tracking-[0.08em] text-crimson">
                 Nombre
@@ -19,10 +19,17 @@
                 class="w-full rounded-sm border border-[#4a4a4a] p-[0.7rem_0.9rem] text-black focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold"
                 type="text"
                 name="name"
-                required
+                
                 autocomplete="name"
+                data-input-name
                 data-guest-input
+                id="nameInput"
             />
+            <p
+                class="hidden text-sm text-crimson"
+                data-error-name
+                role="alert"
+            ></p>
         </label>
 
         <label class="grid gap-[0.4rem]">
@@ -33,9 +40,16 @@
                 class="w-full rounded-sm border border-[#4a4a4a] p-[0.7rem_0.9rem] text-black focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold"
                 type="email"
                 name="email"
-                required
+                
                 autocomplete="email"
+                data-input-email
+                id="emailInput"
             />
+            <p
+                class="hidden text-sm text-crimson"
+                data-error-email
+                role="alert"
+            ></p>
         </label>
 
         <fieldset class="grid gap-[0.4rem]">
@@ -47,7 +61,7 @@
                     class="accent-velvet"
                     type="radio"
                     name="attending"
-                    value="yes"
+                    value="true"
                     required
                 />
                 <span>Asistiré con gusto</span>
@@ -57,11 +71,16 @@
                     class="accent-velvet"
                     type="radio"
                     name="attending"
-                    value="no"
+                    value="false"
                     required
                 />
                 <span>Lamentablemente no podré asistir</span>
             </label>
+            <p
+                class="hidden text-sm text-crimson"
+                data-error-attending
+                role="alert"
+            ></p>
         </fieldset>
 
         <button
@@ -77,20 +96,113 @@
 
 <script>
     const form = document.querySelector<HTMLFormElement>("[data-rsvp-form]");
+    const emailRegex =
+        /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+\-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i;
+
     if (form) {
         const confirmation = form.querySelector<HTMLElement>(
             "[data-confirmation]",
         );
+        const nameInput =
+            form.querySelector<HTMLInputElement>("[data-input-name]");
+        const emailInput =
+            form.querySelector<HTMLInputElement>("[data-input-email]");
+        const attendingInputs = form.querySelectorAll<HTMLInputElement>(
+            "input[name='attending']",
+        );
+        const nameError = form.querySelector<HTMLElement>("[data-error-name]");
+        const emailError =
+            form.querySelector<HTMLElement>("[data-error-email]");
+        const attendingError = form.querySelector<HTMLElement>(
+            "[data-error-attending]",
+        );
+
+        function clearErrors() {
+            nameInput?.classList.remove("!border-crimson");
+            emailInput?.classList.remove("!border-crimson");
+            nameError?.setAttribute("hidden", "");
+            emailError?.setAttribute("hidden", "");
+            attendingError?.setAttribute("hidden", "");
+        }
+
+        function showTextError(
+            input: HTMLInputElement | null,
+            errorEl: HTMLElement | null,
+            message: string,
+        ) {
+            input?.classList.add("!border-crimson");
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.removeAttribute("hidden");
+            }
+        }
+
+        function showAttendingError(message: string) {
+            if (attendingError) {
+                attendingError.textContent = message;
+                attendingError.removeAttribute("hidden");
+            }
+        }
+
+        // Limpia el error mientras el usuario corrige el campo.
+        nameInput?.addEventListener("input", () => {
+            nameInput.classList.remove("!border-crimson");
+            nameError?.setAttribute("hidden", "");
+        });
+
+        emailInput?.addEventListener("input", () => {
+            emailInput.classList.remove("!border-crimson");
+            emailError?.setAttribute("hidden", "");
+        });
+
+        attendingInputs.forEach((radio) => {
+            radio.addEventListener("change", () => {
+                attendingError?.setAttribute("hidden", "");
+            });
+        });
 
         form.addEventListener("submit", (event) => {
             event.preventDefault();
+            clearErrors();
 
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
+            const formData = new FormData(form);
+            const name = String(formData.get("name") ?? "").trim();
+            const email = String(formData.get("email") ?? "").trim();
+            const attending = formData.get("attending");
+
+            let isValid = true;
+
+            if (!name) {
+                showTextError(
+                    nameInput,
+                    nameError,
+                    "Por favor, ingresa tu nombre.",
+                );
+                isValid = false;
             }
 
-            const name = String(new FormData(form).get("name") ?? "").trim();
+            if (!email) {
+                showTextError(
+                    emailInput,
+                    emailError,
+                    "Por favor, ingresa tu correo electrónico.",
+                );
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                showTextError(
+                    emailInput,
+                    emailError,
+                    "Por favor, ingresa un correo electrónico válido.",
+                );
+                isValid = false;
+            }
+
+            if (!attending) {
+                showAttendingError("Por favor, indica si asistirás.");
+                isValid = false;
+            }
+
+            if (!isValid) return;
 
             if (confirmation) {
                 confirmation.textContent = name
