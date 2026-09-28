@@ -1,4 +1,5 @@
 ---
+const apiUrl = import.meta.env.APP_SCRIPT_URL;
 ---
 
 <section
@@ -19,16 +20,17 @@
                 class="w-full rounded-sm border border-[#4a4a4a] p-[0.7rem_0.9rem] text-black focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold"
                 type="text"
                 name="name"
-                
+
                 autocomplete="name"
                 data-input-name
                 data-guest-input
                 id="nameInput"
             />
             <p
-                class="hidden text-sm text-crimson"
+                class="text-sm text-crimson"
                 data-error-name
                 role="alert"
+                hidden
             ></p>
         </label>
 
@@ -40,15 +42,16 @@
                 class="w-full rounded-sm border border-[#4a4a4a] p-[0.7rem_0.9rem] text-black focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold"
                 type="email"
                 name="email"
-                
+
                 autocomplete="email"
                 data-input-email
                 id="emailInput"
             />
             <p
-                class="hidden text-sm text-crimson"
+                class="text-sm text-crimson"
                 data-error-email
                 role="alert"
+                hidden
             ></p>
         </label>
 
@@ -77,14 +80,15 @@
                 <span>Lamentablemente no podré asistir</span>
             </label>
             <p
-                class="hidden text-sm text-crimson"
+                class="text-sm text-crimson"
                 data-error-attending
                 role="alert"
+                hidden
             ></p>
         </fieldset>
 
         <button
-            class="justify-self-start rounded-sm border-0 bg-velvet p-[0.8rem_1.6rem] font-display tracking-[0.06em] text-cream transition-colors duration-200 hover:bg-crimson focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+            class="justify-self-start rounded-sm border-0 bg-velvet p-[0.8rem_1.6rem] font-display tracking-[0.06em] text-cream transition-colors duration-200 hover:bg-crimson focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold cursor-pointer"
             type="submit"
         >
             Enviar confirmación
@@ -94,28 +98,21 @@
     </form>
 </section>
 
-<script>
-    const form = document.querySelector<HTMLFormElement>("[data-rsvp-form]");
+<script define:vars={{ apiUrl }}>
+    const form = document.querySelector("[data-rsvp-form]");
     const emailRegex =
-        /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+\-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i;
+        /^(?!\.)(?!.*\.\.)([a-z0-9_'+'\.\.]*)[a-z0-9_+\-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i;
 
     if (form) {
-        const confirmation = form.querySelector<HTMLElement>(
-            "[data-confirmation]",
-        );
-        const nameInput =
-            form.querySelector<HTMLInputElement>("[data-input-name]");
-        const emailInput =
-            form.querySelector<HTMLInputElement>("[data-input-email]");
-        const attendingInputs = form.querySelectorAll<HTMLInputElement>(
+        const confirmation = form.querySelector("[data-confirmation]");
+        const nameInput = form.querySelector("[data-input-name]");
+        const emailInput = form.querySelector("[data-input-email]");
+        const attendingInputs = form.querySelectorAll(
             "input[name='attending']",
         );
-        const nameError = form.querySelector<HTMLElement>("[data-error-name]");
-        const emailError =
-            form.querySelector<HTMLElement>("[data-error-email]");
-        const attendingError = form.querySelector<HTMLElement>(
-            "[data-error-attending]",
-        );
+        const nameError = form.querySelector("[data-error-name]");
+        const emailError = form.querySelector("[data-error-email]");
+        const attendingError = form.querySelector("[data-error-attending]");
 
         function clearErrors() {
             nameInput?.classList.remove("!border-crimson");
@@ -125,11 +122,7 @@
             attendingError?.setAttribute("hidden", "");
         }
 
-        function showTextError(
-            input: HTMLInputElement | null,
-            errorEl: HTMLElement | null,
-            message: string,
-        ) {
+        function showTextError(input, errorEl, message) {
             input?.classList.add("!border-crimson");
             if (errorEl) {
                 errorEl.textContent = message;
@@ -137,7 +130,7 @@
             }
         }
 
-        function showAttendingError(message: string) {
+        function showAttendingError(message) {
             if (attendingError) {
                 attendingError.textContent = message;
                 attendingError.removeAttribute("hidden");
@@ -161,7 +154,7 @@
             });
         });
 
-        form.addEventListener("submit", (event) => {
+        form.addEventListener("submit", async (event) => {
             event.preventDefault();
             clearErrors();
 
@@ -180,7 +173,6 @@
                 );
                 isValid = false;
             }
-
             if (!email) {
                 showTextError(
                     emailInput,
@@ -204,14 +196,44 @@
 
             if (!isValid) return;
 
-            if (confirmation) {
-                confirmation.textContent = name
-                    ? `¡Gracias, ${name}! Tu respuesta ha quedado registrada.`
-                    : "¡Gracias! Tu respuesta ha quedado registrada.";
-                confirmation.removeAttribute("hidden");
-            }
+            const submitButton = form.querySelector("button[type='submit']");
+            submitButton?.setAttribute("disabled", "");
 
-            form.reset();
+            const payload = new FormData();
+            payload.append("name", name);
+            payload.append("email", email);
+            payload.append("check", String(attending));
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    body: payload,
+                });
+
+                if (response.ok) {
+                    if (confirmation) {
+                        confirmation.textContent = name
+                            ? `¡Gracias, ${name}! Tu respuesta ha quedado registrada.`
+                            : "¡Gracias! Tu respuesta ha quedado registrada.";
+                        confirmation.removeAttribute("hidden");
+                    }
+                    form.reset();
+                } else {
+                    if (confirmation) {
+                        confirmation.textContent =
+                            "Hubo un problema al enviar tu respuesta. Por favor, inténtalo de nuevo.";
+                        confirmation.removeAttribute("hidden");
+                    }
+                }
+            } catch {
+                if (confirmation) {
+                    confirmation.textContent =
+                        "No se pudo conectar con el servidor. Por favor, inténtalo más tarde.";
+                    confirmation.removeAttribute("hidden");
+                }
+            } finally {
+                submitButton?.removeAttribute("disabled");
+            }
         });
     }
 </script>
