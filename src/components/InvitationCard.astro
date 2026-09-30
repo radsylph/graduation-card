@@ -1,5 +1,6 @@
 ---
-import EnvelopeGif from "../assets/test.gif";
+import EnvelopeGif from "../assets/cardNoLoop.gif";
+import EnvelopeOpen from "../assets/FlatEnvlopedOpen.svg";
 import waxSeal from "../assets/waxSeal.svg";
 import judith from "../assets/JudithPhoto.png";
 
@@ -10,7 +11,8 @@ interface Props {
 const { displayDate } = Astro.props;
 ---
 
-<img src={EnvelopeGif.src} alt="" />
+<img src={EnvelopeOpen.src} alt="invitation gif" id="invitation-card" />
+
 <article class="relative mx-auto max-w-170 border-2 border-gold bg-parchment p-[clamp(1.5rem,5vw,3.25rem)] text-center text-canvas before:pointer-events-none before:absolute before:inset-2.5 before:content-[''] before:border before:border-gold">
     <div class="relative grid justify-items-center gap-5">
         <p class="text-[1.35rem] italic">
@@ -36,3 +38,32 @@ const { displayDate } = Astro.props;
         height="91"
     />
 </article>
+
+<script define:vars={{ EnvelopeGif }}>
+    const invitationCard = document.getElementById("invitation-card");
+    const backdrop = document.querySelector(".backdrop");
+
+    function loadInvitationGif() {
+        if (!invitationCard) return;
+
+        const cacheBuster = `?t=${Date.now()}`;
+        invitationCard.src = `${EnvelopeGif.src}${cacheBuster}`;
+        invitationCard.style.opacity = "1";
+    }
+
+    function scheduleGifLoad() {
+        window.setTimeout(loadInvitationGif, 1200);
+    }
+
+    if (
+        invitationCard &&
+        backdrop &&
+        backdrop.classList.contains("is-shrinking")
+    ) {
+        backdrop.addEventListener("animationend", scheduleGifLoad, {
+            once: true,
+        });
+    } else {
+        scheduleGifLoad();
+    }
+</script>
