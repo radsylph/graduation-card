@@ -37,12 +37,10 @@ const displayDate = new Intl.DateTimeFormat("es", {
     />
 
     <main class="min-h-screen bg-parchment p-[clamp(1.5rem,5vw,4rem)_clamp(1rem,4vw,3rem)] font-serif text-cream">
-        <FadeInText enhance duration={0.7} yOffset={30}>
-            <section class="-mt-[clamp(1.5rem,5vw,4rem)] -mx-[clamp(1rem,4vw,3rem)] grid gap-8 justify-items-center bg-white px-[clamp(1rem,4vw,3rem)] py-[clamp(2.5rem,6vw,4rem)]">
-                <InvitationCard displayDate={displayDate} />
-                <Countdown date={EVENT_DATE} />
-            </section>
-        </FadeInText>
+        <section class="-mt-[clamp(1.5rem,5vw,4rem)] -mx-[clamp(1rem,4vw,3rem)] grid gap-8 justify-items-center bg-white px-[clamp(1rem,4vw,3rem)] py-[clamp(2.5rem,6vw,4rem)]">
+            <InvitationCard displayDate={displayDate} />
+            <Countdown date={EVENT_DATE} />
+        </section>
 
         <FadeInText enhance duration={0.7} yOffset={30} delay={0.1}>
             <div class="relative mx-auto max-w-240">
