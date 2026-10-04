@@ -35,3 +35,19 @@ _Avoid_: Signup, response form
 **Disclaimer**:
 The section on the invitation page that states the no-cellphone rule so guests can be fully present during the event.
 _Avoid_: Phone policy, fine print
+
+**Menu page**:
+The page served at `/menu` showing the restaurant's menu with its categories, items, and prices.
+_Avoid_: Catalog page, food page
+
+**Menu category**:
+A named group of menu items, e.g. "Postres" or "Platos Principales".
+_Avoid_: Section (ambiguous with page sections), group
+
+**Menu item**:
+A single dish or drink, with a name, optional description, price, and photo.
+_Avoid_: Product, entry
+
+**Restaurant**:
+Aliño Restaurante, the restaurant serving the event whose menu is reproduced on the menu page.
+_Avoid_: Venue, caterer
