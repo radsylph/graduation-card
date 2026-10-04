@@ -1,0 +1,161 @@
+---
+import menu from "../data/menu.json";
+
+const { categories } = menu;
+
+const formatPrice = (value: number) => `$ ${value.toFixed(2)}`;
+---
+
+<div class="font-serif">
+    <header class="bg-wine px-6 py-14 text-center">
+        <p class="font-display text-sm uppercase tracking-[0.35em] text-gold">
+            Aliño Restaurante
+        </p>
+        <h1 class="mt-4 font-display text-5xl tracking-[0.06em] text-gold sm:text-6xl">
+            Menú
+        </h1>
+        <p class="mx-auto mt-5 max-w-[52ch] text-lg leading-relaxed text-cream">
+            Una selección de nuestra carta para acompañar la celebración.
+        </p>
+        <a
+            href="/invitation/friends"
+            class="mt-8 inline-block font-display text-sm tracking-[0.08em] text-cream transition-colors hover:text-gold"
+        >
+            ← Volver a la invitación
+        </a>
+    </header>
+
+    <nav
+        class="sticky top-0 z-10 border-b border-gold/40 bg-parchment/95 px-4 py-3 backdrop-blur"
+        aria-label="Categorías del menú"
+    >
+        <div class="mx-auto flex max-w-7xl gap-2 overflow-x-auto">
+            {categories.map((category) => (
+                <a
+                    href={`#${category.id}`}
+                    class="shrink-0 rounded-full border border-gold px-4 py-1.5 font-display text-sm tracking-[0.04em] text-velvet transition-colors hover:bg-gold hover:text-parchment"
+                >
+                    {category.name}
+                </a>
+            ))}
+        </div>
+    </nav>
+
+    <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+        {categories.map((category) => (
+            <section id={category.id} class="scroll-mt-20 pt-12 first:pt-0">
+                <div class="flex items-center gap-4">
+                    <h2 class="font-display text-2xl tracking-[0.06em] text-gold">
+                        {category.name}
+                    </h2>
+                    <span
+                        class="h-px flex-1 bg-gold/40"
+                        aria-hidden="true"
+                    ></span>
+                </div>
+
+                <ul class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {category.items.map((item, index) => (
+                        <li
+                            class="menu-item relative flex flex-col overflow-hidden rounded-md border border-gold/50 bg-white shadow-sm"
+                            style={`--reveal-delay: ${(index % 4) * 50}ms`}
+                        >
+                            {item.promo && (
+                                <span class="absolute left-3 top-3 z-10 rounded-sm bg-crimson px-2 py-0.5 font-display text-xs tracking-[0.08em] text-cream">
+                                    ★ PROMO
+                                </span>
+                            )}
+                            <img
+                                src={item.image}
+                                alt={item.name}
+                                loading="lazy"
+                                decoding="async"
+                                class="aspect-square w-full object-cover"
+                            />
+                            <div class="flex flex-1 flex-col gap-2 p-4">
+                                <h3 class="font-display text-base leading-snug text-velvet">
+                                    {item.name}
+                                </h3>
+                                {item.description && (
+                                    <p class="line-clamp-2 text-sm leading-snug text-black/70">
+                                        {item.description}
+                                    </p>
+                                )}
+                                <div class="mt-auto pt-1 font-display text-lg text-gold">
+                                    {item.oldPrice != null && (
+                                        <span class="mr-2 text-base text-black/40 line-through">
+                                            {formatPrice(item.oldPrice)}
+                                        </span>
+                                    )}
+                                    {formatPrice(item.price)}
+                                </div>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        ))}
+    </div>
+
+    <footer class="px-6 pb-10 text-center">
+        <p class="text-sm text-black/60">
+            Menú de{" "}
+            <a
+                href="https://alinorestaurante.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="underline decoration-gold/60 underline-offset-2 transition-colors hover:text-crimson"
+            >
+                Aliño Restaurante
+            </a>
+        </p>
+    </footer>
+</div>
+
+<style>
+    .menu-item {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+            opacity 0.6s ease var(--reveal-delay, 0ms),
+            transform 0.6s ease var(--reveal-delay, 0ms);
+    }
+
+    .menu-item.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .menu-item {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+</style>
+
+<script>
+    const items = document.querySelectorAll(".menu-item");
+    const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reducedMotion || !("IntersectionObserver" in window)) {
+        items.forEach((item) => item.classList.add("is-visible"));
+    } else {
+        const observer = new IntersectionObserver(
+            (entries, observer) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { rootMargin: "0px 0px -8% 0px", threshold: 0.15 },
+        );
+
+        items.forEach((item) => observer.observe(item));
+    }
+</script>

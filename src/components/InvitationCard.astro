@@ -6,9 +6,10 @@ import judith from "../assets/JudithPhoto.png";
 
 interface Props {
     displayDate: string;
+    timeLabel: string;
 }
 
-const { displayDate } = Astro.props;
+const { displayDate, timeLabel } = Astro.props;
 ---
 
 <img src={EnvelopeOpen.src} alt="invitation gif" id="invitation-card" />
@@ -26,7 +27,7 @@ const { displayDate } = Astro.props;
             {displayDate}
         </p>
         <p class="font-display text-[1.4rem] tracking-[0.08em] text-crimson">
-            Horario: si - si
+            Horario: {timeLabel}
         </p>
     </div>
     <img

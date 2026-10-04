@@ -31,3 +31,39 @@ _Avoid_: Recipient, attendee
 **RSVP**:
 The guest's confirmation of whether they will attend.
 _Avoid_: Signup, response form
+
+**RSVP record**:
+The stored copy of a guest's submitted RSVP (name, email, attending choice, and submission timestamp), saved in the browser's localStorage for the current event only. It is used to show the RSVP confirmation instead of the form on subsequent visits to the same device.
+_Avoid_: form cache, submission cache, local cache
+
+**RSVP confirmation**:
+The message shown in place of the RSVP form when an RSVP record exists for the current event on the current device.
+_Avoid_: success message (ambiguous — could mean the post-submit message), thank-you note
+
+**Disclaimer**:
+The section on the invitation page that states the no-cellphone rule so guests can be fully present during the event.
+_Avoid_: Phone policy, fine print
+
+**Menu page**:
+The page served at `/menu` showing the restaurant's menu with its categories, items, and prices.
+_Avoid_: Catalog page, food page
+
+**Menu category**:
+A named group of menu items, e.g. "Postres" or "Platos Principales".
+_Avoid_: Section (ambiguous with page sections), group
+
+**Menu item**:
+A single dish or drink, with a name, optional description, price, and photo.
+_Avoid_: Product, entry
+
+**Restaurant**:
+Aliño Restaurante, the restaurant where the friends event is held and whose menu is reproduced on the menu page.
+_Avoid_: Venue, caterer
+
+**Event**:
+A single scheduled gathering guests are invited to, each with its own date/time, location, and optional menu. This site hosts two: the family event and the friends event.
+_Avoid_: Project, site, template
+
+**Guest group**:
+The audience a given event is for — family or friends.
+_Avoid_: Audience, segment, list
