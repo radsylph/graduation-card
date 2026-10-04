@@ -1,4 +1,9 @@
 ---
+interface Props {
+    typeOrigin: string;
+}
+
+const { typeOrigin } = Astro.props;
 const apiUrl = import.meta.env.APP_SCRIPT_URL;
 ---
 
@@ -12,6 +17,8 @@ const apiUrl = import.meta.env.APP_SCRIPT_URL;
     <p class="mb-6 text-cream">Por favor, confirma tu asistencia.</p>
 
     <form class="grid gap-5 justify-center" data-rsvp-form novalidate>
+        <input type="hidden" name="typeOrigin" value={typeOrigin} />
+
         <label class="grid gap-[0.4rem]">
             <span class="text-[0.85rem] uppercase tracking-[0.08em] text-crimson">
                 Nombre
@@ -88,17 +95,42 @@ const apiUrl = import.meta.env.APP_SCRIPT_URL;
         </fieldset>
 
         <button
-            class="justify-self-start rounded-sm border-0 bg-velvet p-[0.8rem_1.6rem] font-display tracking-[0.06em] text-cream transition-colors duration-200 hover:bg-crimson focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold cursor-pointer"
+            class="inline-flex cursor-pointer items-center justify-center gap-2 justify-self-start rounded-sm border-0 bg-velvet p-[0.8rem_1.6rem] font-display tracking-[0.06em] text-cream transition-colors duration-200 hover:bg-crimson focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
             type="submit"
+            aria-busy="false"
         >
-            Enviar confirmación
+            <span class="spinner" data-spinner aria-hidden="true" hidden></span>
+            <span data-button-text>Enviar confirmación</span>
         </button>
 
         <p class="text-emerald-600" data-confirmation hidden role="status"></p>
     </form>
 </section>
 
-<script define:vars={{ apiUrl }}>
+<style>
+    .spinner {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 9999px;
+        border: 2px solid currentColor;
+        border-top-color: transparent;
+        animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .spinner {
+            animation-duration: 1.5s;
+        }
+    }
+</style>
+
+<script define:vars={{ apiUrl, typeOrigin }}>
     const form = document.querySelector("[data-rsvp-form]");
     const emailRegex =
         /^(?!\.)(?!.*\.\.)([a-z0-9_'+'\.\.]*)[a-z0-9_+\-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i;
@@ -113,6 +145,32 @@ const apiUrl = import.meta.env.APP_SCRIPT_URL;
         const nameError = form.querySelector("[data-error-name]");
         const emailError = form.querySelector("[data-error-email]");
         const attendingError = form.querySelector("[data-error-attending]");
+
+        const submitButton = form.querySelector("button[type='submit']");
+        const spinner = submitButton?.querySelector("[data-spinner]");
+        const buttonText = submitButton?.querySelector("[data-button-text]");
+        const restingText = buttonText?.textContent ?? "Enviar confirmación";
+
+        function setLoading(loading) {
+            if (!submitButton) return;
+            if (loading) {
+                submitButton.setAttribute("disabled", "");
+            } else {
+                submitButton.removeAttribute("disabled");
+            }
+            submitButton.setAttribute("aria-busy", String(loading));
+            if (spinner) spinner.hidden = !loading;
+            if (buttonText) {
+                buttonText.textContent = loading ? "Enviando…" : restingText;
+            }
+        }
+
+        function cleanForm() {
+            form.reset();
+            // setTimeout(() => {
+            //     form.setAttribute("hidden", "");
+            // }, 1000);
+        }
 
         function clearErrors() {
             nameInput?.classList.remove("!border-crimson");
@@ -196,13 +254,13 @@ const apiUrl = import.meta.env.APP_SCRIPT_URL;
 
             if (!isValid) return;
 
-            const submitButton = form.querySelector("button[type='submit']");
-            submitButton?.setAttribute("disabled", "");
+            setLoading(true);
 
             const payload = new FormData();
             payload.append("name", name);
             payload.append("email", email);
             payload.append("check", String(attending));
+            payload.append("typeOrigin", String(typeOrigin));
 
             try {
                 const response = await fetch(apiUrl, {
@@ -217,7 +275,7 @@ const apiUrl = import.meta.env.APP_SCRIPT_URL;
                             : "¡Gracias! Tu respuesta ha quedado registrada.";
                         confirmation.removeAttribute("hidden");
                     }
-                    form.reset();
+                    cleanForm();
                 } else {
                     if (confirmation) {
                         confirmation.textContent =
@@ -232,7 +290,7 @@ const apiUrl = import.meta.env.APP_SCRIPT_URL;
                     confirmation.removeAttribute("hidden");
                 }
             } finally {
-                submitButton?.removeAttribute("disabled");
+                setLoading(false);
             }
         });
     }

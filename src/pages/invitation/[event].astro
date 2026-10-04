@@ -1,22 +1,35 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import InvitationCard from "../components/InvitationCard.astro";
-import Countdown from "../components/Countdown.astro";
-import RsvpForm from "../components/RsvpForm.astro";
-import DressCode from "../components/dressCode.astro";
-import Disclaimer from "../components/Disclaimer.astro";
-import Location from "../components/Location.astro";
+import type { GetStaticPaths } from "astro";
+import Layout from "../../layouts/Layout.astro";
+import InvitationCard from "../../components/InvitationCard.astro";
+import Countdown from "../../components/Countdown.astro";
+import RsvpForm from "../../components/RsvpForm.astro";
+import DressCode from "../../components/dressCode.astro";
+import Disclaimer from "../../components/Disclaimer.astro";
+import Location from "../../components/Location.astro";
 import FadeInText from "@astroanimate/core/FadeInText";
+import { events } from "../../data/events";
 
-const EVENT_DATE = "2026-10-10T18:00:00-04:00";
+export const getStaticPaths = (() => {
+    return events.map((event) => ({
+        params: { event: event.slug },
+        props: { event },
+    }));
+}) satisfies GetStaticPaths;
 
-const event = new Date(EVENT_DATE);
+interface Props {
+    event: (typeof events)[number];
+}
+
+const { event } = Astro.props;
+
+const eventDate = new Date(event.dateTime);
 const displayDate = new Intl.DateTimeFormat("es", {
     day: "numeric",
     month: "long",
     year: "numeric",
     timeZone: "UTC",
-}).format(event);
+}).format(eventDate);
 ---
 
 <div
@@ -39,47 +52,58 @@ const displayDate = new Intl.DateTimeFormat("es", {
 
     <main class="min-h-screen bg-parchment p-[clamp(1.5rem,5vw,4rem)_clamp(1rem,4vw,3rem)] font-serif text-cream">
         <section class="-mt-[clamp(1.5rem,5vw,4rem)] -mx-[clamp(1rem,4vw,3rem)] grid gap-8 justify-items-center bg-white px-[clamp(1rem,4vw,3rem)] py-[clamp(2.5rem,6vw,4rem)]">
-            <InvitationCard displayDate={displayDate} />
-            <Countdown date={EVENT_DATE} />
+            <InvitationCard
+                displayDate={displayDate}
+                timeLabel={event.timeLabel}
+            />
+            <Countdown date={event.dateTime} />
         </section>
 
         <FadeInText enhance duration={0.7} yOffset={30} delay={0.1}>
             <div class="relative mx-auto max-w-240">
-                <Location />
+                <Location
+                    venueName={event.venueName}
+                    address={event.address}
+                    mapEmbedUrl={event.mapEmbedUrl}
+                />
             </div>
         </FadeInText>
 
         <FadeInText enhance duration={0.7} yOffset={30} delay={0.2}>
-            <DressCode />
+            <DressCode text={event.dressCodeText} />
         </FadeInText>
 
-        <FadeInText enhance duration={0.7} yOffset={30} delay={0.25}>
-            <Disclaimer />
-        </FadeInText>
+        {event.hasDisclaimer && (
+            <FadeInText enhance duration={0.7} yOffset={30} delay={0.25}>
+                <Disclaimer />
+            </FadeInText>
+        )}
 
-        <FadeInText enhance duration={0.7} yOffset={30} delay={0.28}>
-            <section
-                class="card mx-auto mt-12 max-w-170 p-[clamp(1.5rem,4vw,2.5rem)] text-center"
-                aria-labelledby="menu-heading"
-            >
-                <h2 id="menu-heading" class="font-display text-gold">
-                    El menú
-                </h2>
-                <p class="mx-auto mt-3 max-w-[52ch] text-[1.15rem] leading-[1.6] text-black">
-                    Descubre la carta de Aliño Restaurante, que estará
-                    disponible durante la celebración.
-                </p>
-                <a
-                    href="/menu"
-                    class="mt-6 inline-block rounded-sm border-0 bg-velvet px-8 py-3 font-display tracking-[0.06em] text-cream transition-colors duration-200 hover:bg-crimson"
+        {event.hasMenu && (
+            <FadeInText enhance duration={0.7} yOffset={30} delay={0.28}>
+                <section
+                    class="card mx-auto mt-12 max-w-170 p-[clamp(1.5rem,4vw,2.5rem)] text-center"
+                    aria-labelledby="menu-heading"
                 >
-                    Ver menú
-                </a>
-            </section>
-        </FadeInText>
+                    <h2 id="menu-heading" class="font-display text-gold">
+                        El menú
+                    </h2>
+                    <p class="mx-auto mt-3 max-w-[52ch] text-[1.15rem] leading-[1.6] text-black">
+                        Descubre la carta de Aliño Restaurante, que estará
+                        disponible durante la celebración.
+                    </p>
+                    <a
+                        href="/menu"
+                        class="mt-6 inline-block rounded-sm border-0 bg-velvet px-8 py-3 font-display tracking-[0.06em] text-cream transition-colors duration-200 hover:bg-crimson"
+                    >
+                        Ver menú
+                    </a>
+                </section>
+            </FadeInText>
+        )}
 
         <FadeInText enhance duration={0.7} yOffset={30} delay={0.35}>
-            <RsvpForm />
+            <RsvpForm typeOrigin={event.slug} />
         </FadeInText>
     </main>
 </Layout>

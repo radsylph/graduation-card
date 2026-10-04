@@ -49,5 +49,13 @@ A single dish or drink, with a name, optional description, price, and photo.
 _Avoid_: Product, entry
 
 **Restaurant**:
-Aliño Restaurante, the restaurant serving the event whose menu is reproduced on the menu page.
+Aliño Restaurante, the restaurant where the friends event is held and whose menu is reproduced on the menu page.
 _Avoid_: Venue, caterer
+
+**Event**:
+A single scheduled gathering guests are invited to, each with its own date/time, location, and optional menu. This site hosts two: the family event and the friends event.
+_Avoid_: Project, site, template
+
+**Guest group**:
+The audience a given event is for — family or friends.
+_Avoid_: Audience, segment, list

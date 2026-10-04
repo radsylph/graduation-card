@@ -23,7 +23,13 @@ import waxSeal from "../assets/waxSeal.svg";
                 width="482"
                 height="303"
             />
-            <a class="seal" href="/invitation" aria-label="Abrir la invitación">
+            <a
+                class="seal"
+
+                href="/invitation/family"
+
+                aria-label="Abrir la invitación"
+            >
                 <img src={waxSeal.src} alt="" width="91" height="91" />
             </a>
         </div>
@@ -186,6 +192,16 @@ import waxSeal from "../assets/waxSeal.svg";
     const envelope = document.querySelector<HTMLDivElement>(".envelope");
     const backdrop = document.querySelector<HTMLDivElement>(".backdrop");
 
+    const params = new URLSearchParams(window.location.search);
+    const rawEvent = (params.get("event") ?? "").trim();
+    const guest = (params.get("guest") ?? "").trim().slice(0, 80);
+    const validEvents = ["family", "friends"];
+    const eventSlug = validEvents.includes(rawEvent) ? rawEvent : "family";
+    const guestQuery = guest ? `?guest=${encodeURIComponent(guest)}` : "";
+    const targetHref = `/invitation/${eventSlug}${guestQuery}`;
+
+    seal?.setAttribute("href", targetHref);
+
     if (seal && envelope && backdrop) {
         const reducedMotion = window.matchMedia(
             "(prefers-reduced-motion: reduce)",
@@ -194,8 +210,6 @@ import waxSeal from "../assets/waxSeal.svg";
         let opening = false;
         let navigationTimer: number | undefined;
 
-        // Returning to this page via the browser back button restores it from the
-        // back/forward cache in its "opened" state — reset to the sealed envelope.
         window.addEventListener("pageshow", (event) => {
             if (!event.persisted) return;
 
@@ -207,7 +221,6 @@ import waxSeal from "../assets/waxSeal.svg";
         });
 
         seal.addEventListener("click", (event: MouseEvent) => {
-            // Let native navigation handle reduced-motion, non-primary, and new-tab clicks.
             if (
                 opening ||
                 reducedMotion ||
