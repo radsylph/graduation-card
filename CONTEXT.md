@@ -31,3 +31,7 @@ _Avoid_: Recipient, attendee
 **RSVP**:
 The guest's confirmation of whether they will attend.
 _Avoid_: Signup, response form
+
+**Disclaimer**:
+The section on the invitation page that states the no-cellphone rule so guests can be fully present during the event.
+_Avoid_: Phone policy, fine print

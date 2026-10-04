@@ -1,0 +1,24 @@
+---
+import NoCellphone from "../assets/noCellphone.svg";
+---
+
+<section
+    class="card mx-auto mt-12 max-w-170 p-[clamp(1.5rem,4vw,2.5rem)] text-center"
+    aria-labelledby="disclaimer-heading"
+>
+    <div
+        class="no-phone-sign mx-auto w-[clamp(80px,25vw,120px)] aspect-square"
+        aria-hidden="true"
+    >
+        <img src={NoCellphone.src} alt="NoCellphoneImage" />
+    </div>
+
+    <h2 id="disclaimer-heading" class="mt-6 font-display text-gold">
+        Una tarde sin distracciones
+    </h2>
+
+    <p class="mx-auto mt-3 max-w-[52ch] text-[1.15rem] leading-[1.6] text-black">
+        Para fomentar la conexión entre todos, te pedimos guardar tu celular
+        durante la celebración. Disfrutemos juntos este momento.
+    </p>
+</section>

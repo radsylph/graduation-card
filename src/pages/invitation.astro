@@ -4,6 +4,7 @@ import InvitationCard from "../components/InvitationCard.astro";
 import Countdown from "../components/Countdown.astro";
 import RsvpForm from "../components/RsvpForm.astro";
 import DressCode from "../components/dressCode.astro";
+import Disclaimer from "../components/Disclaimer.astro";
 import Location from "../components/Location.astro";
 import FadeInText from "@astroanimate/core/FadeInText";
 
@@ -50,6 +51,10 @@ const displayDate = new Intl.DateTimeFormat("es", {
 
         <FadeInText enhance duration={0.7} yOffset={30} delay={0.2}>
             <DressCode />
+        </FadeInText>
+
+        <FadeInText enhance duration={0.7} yOffset={30} delay={0.25}>
+            <Disclaimer />
         </FadeInText>
 
         <FadeInText enhance duration={0.7} yOffset={30} delay={0.3}>
