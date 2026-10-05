@@ -4,7 +4,7 @@ export interface Event {
   timeLabel: string;
   venueName: string;
   address: string[];
-  mapEmbedUrl?: string;
+  mapEmbedUrl: string;
   googleMapsLink: string;
   hasMenu: boolean;
   hasDisclaimer: boolean;
