@@ -57,39 +57,46 @@ const formatPrice = (value: number) => `$ ${value.toFixed(2)}`;
                 <ul class="mt-6 grid grid-cols-2 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {category.items.map((item, index) => (
                         <li
-                            class="menu-item relative flex flex-col overflow-hidden rounded-md border border-gold/50 bg-white shadow-sm"
+                            class="menu-item relative flex flex-col overflow-hidden rounded-md border border-gold/50 bg-white shadow-sm transition-colors hover:border-crimson/60"
                             style={`--reveal-delay: ${(index % 4) * 50}ms`}
                         >
-                            {item.promo && (
-                                <span class="absolute left-3 top-3 z-10 rounded-sm bg-crimson px-2 py-0.5 font-display text-xs tracking-[0.08em] text-cream">
-                                    ★ PROMO
-                                </span>
-                            )}
-                            <img
-                                src={item.image}
-                                alt={item.name}
-                                loading="lazy"
-                                decoding="async"
-                                class="aspect-square w-full object-cover"
-                            />
-                            <div class="flex flex-1 flex-col gap-2 p-4">
-                                <h3 class="font-display text-base leading-snug text-velvet">
-                                    {item.name}
-                                </h3>
-                                {item.description && (
-                                    <p class="line-clamp-2 text-sm leading-snug text-black/70">
-                                        {item.description}
-                                    </p>
+                            <a
+                                href={item.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="group flex flex-1 flex-col"
+                            >
+                                {item.promo && (
+                                    <span class="absolute left-3 top-3 z-10 rounded-sm bg-crimson px-2 py-0.5 font-display text-xs tracking-[0.08em] text-cream">
+                                        ★ PROMO
+                                    </span>
                                 )}
-                                <div class="mt-auto pt-1 font-display text-lg text-gold">
-                                    {item.oldPrice != null && (
-                                        <span class="mr-2 text-base text-black/40 line-through">
-                                            {formatPrice(item.oldPrice)}
-                                        </span>
+                                <img
+                                    src={item.image}
+                                    alt={item.name}
+                                    loading="lazy"
+                                    decoding="async"
+                                    class="aspect-square w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                />
+                                <div class="flex flex-1 flex-col gap-2 p-4">
+                                    <h3 class="font-display text-base leading-snug text-velvet">
+                                        {item.name}
+                                    </h3>
+                                    {item.description && (
+                                        <p class="line-clamp-2 text-sm leading-snug text-black/70">
+                                            {item.description}
+                                        </p>
                                     )}
-                                    {formatPrice(item.price)}
+                                    <div class="mt-auto pt-1 font-display text-lg text-gold">
+                                        {item.oldPrice != null && (
+                                            <span class="mr-2 text-base text-black/40 line-through">
+                                                {formatPrice(item.oldPrice)}
+                                            </span>
+                                        )}
+                                        {formatPrice(item.price)}
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </li>
                     ))}
                 </ul>
