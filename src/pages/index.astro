@@ -6,6 +6,20 @@ import waxSeal from "../assets/waxSeal.svg";
 ---
 
 <Layout title="Judith — Invitación">
+    <link
+        slot="head"
+        rel="preload"
+        as="image"
+        href={envelope.src}
+        type="image/svg+xml"
+    />
+    <link
+        slot="head"
+        rel="preload"
+        as="image"
+        href={waxSeal.src}
+        type="image/svg+xml"
+    />
     <main class="flex justify-center items-center min-h-screen">
         <div class="envelope">
             <img
