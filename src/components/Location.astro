@@ -5,7 +5,7 @@ interface Props {
     mapEmbedUrl?: string;
 }
 
-const { venueName, address, mapEmbedUrl } = Astro.props;
+const { venueName, address, mapEmbedUrl, googleMapsLink } = Astro.props;
 ---
 
 <section
@@ -30,5 +30,11 @@ const { venueName, address, mapEmbedUrl } = Astro.props;
                 <p class="my-[0.15rem] text-black">{line}</p>
             ))}
         </div>
+        <a
+            href={googleMapsLink}
+            class="mt-6 inline-block rounded-sm border-0 bg-velvet px-8 py-3 font-display tracking-[0.06em] text-cream transition-colors duration-200 hover:bg-crimson text-center"
+        >
+            Abir google maps
+        </a>
     </div>
 </section>
