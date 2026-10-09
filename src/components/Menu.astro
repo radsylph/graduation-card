@@ -1,123 +1,109 @@
 ---
 import menu from "../data/menu.json";
-
-const { categories } = menu;
-
-const formatPrice = (value: number) => `$ ${value.toFixed(2)}`;
 ---
 
-<div class="font-serif">
-    <header class="bg-wine px-6 py-14 text-center">
-        <p class="font-display text-sm uppercase tracking-[0.35em] text-gold">
-            Aliño Restaurante
-        </p>
-        <h1 class="mt-4 font-display text-5xl tracking-[0.06em] text-gold sm:text-6xl">
-            Menú
-        </h1>
-        <p class="mx-auto mt-5 max-w-[52ch] text-lg leading-relaxed text-cream">
-            Una selección de nuestra carta para acompañar la celebración.
-        </p>
-        <a
-            href="/invitation/friends"
-            class="mt-8 inline-block font-display text-sm tracking-[0.08em] text-cream transition-colors hover:text-gold"
-        >
-            ← Volver a la invitación
-        </a>
-    </header>
+<section
+    class="card mx-auto mt-12 max-w-170 p-[clamp(1.5rem,4vw,2.5rem)]"
+    aria-labelledby="menu-heading"
+>
+    <h2 id="menu-heading" class="text-center font-display text-gold">
+        El menú
+    </h2>
+    <p class="mx-auto mt-3 max-w-[52ch] text-center text-[1.15rem] leading-[1.6] text-black">
+        Estas opciones de Aliño Restaurante estarán disponibles durante la
+        celebración. Para cubrir la comida, se solicitará una contribución de
+        aproximadamente 9$ por invitado.
+    </p>
 
-    <nav
-        class="sticky top-0 z-10 border-b border-gold/40 bg-parchment/95 px-4 py-3 backdrop-blur"
-        aria-label="Categorías del menú"
-    >
-        <div class="mx-auto flex max-w-7xl gap-2 overflow-x-auto">
-            {categories.map((category) => (
-                <a
-                    href={`#${category.id}`}
-                    class="shrink-0 rounded-full border border-gold px-4 py-1.5 font-display text-sm tracking-[0.04em] text-velvet transition-colors hover:bg-gold hover:text-parchment"
-                >
-                    {category.name}
-                </a>
-            ))}
-        </div>
-    </nav>
-
-    <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-        {categories.map((category) => (
-            <section id={category.id} class="scroll-mt-20 pt-12 first:pt-0">
-                <div class="flex items-center gap-4">
-                    <h2 class="font-display text-2xl tracking-[0.06em] text-gold">
-                        {category.name}
-                    </h2>
-                    <span
-                        class="h-px flex-1 bg-gold/40"
-                        aria-hidden="true"
-                    ></span>
-                </div>
-
-                <ul class="mt-6 grid grid-cols-2 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {category.items.map((item, index) => (
-                        <li
-                            class="menu-item relative flex flex-col overflow-hidden rounded-md border border-gold/50 bg-white shadow-sm transition-colors hover:border-crimson/60"
-                            style={`--reveal-delay: ${(index % 4) * 50}ms`}
-                        >
-                            <a
-                                href={item.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="group flex flex-1 flex-col"
-                            >
-                                {item.promo && (
-                                    <span class="absolute left-3 top-3 z-10 rounded-sm bg-crimson px-2 py-0.5 font-display text-xs tracking-[0.08em] text-cream">
-                                        ★ PROMO
-                                    </span>
-                                )}
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    loading="lazy"
-                                    decoding="async"
-                                    class="aspect-square w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                />
-                                <div class="flex flex-1 flex-col gap-2 p-4">
-                                    <h3 class="font-display text-base leading-snug text-velvet">
-                                        {item.name}
-                                    </h3>
-                                    {item.description && (
-                                        <p class="line-clamp-2 text-sm leading-snug text-black/70">
-                                            {item.description}
-                                        </p>
-                                    )}
-                                    <div class="mt-auto pt-1 font-display text-lg text-gold">
-                                        {item.oldPrice != null && (
-                                            <span class="mr-2 text-base text-black/40 line-through">
-                                                {formatPrice(item.oldPrice)}
-                                            </span>
-                                        )}
-                                        {formatPrice(item.price)}
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-            </section>
-        ))}
-    </div>
-
-    <footer class="px-6 pb-10 text-center">
-        <p class="text-sm text-black/60">
-            Menú de{" "}
-            <a
-                href="https://alinorestaurante.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="underline decoration-gold/60 underline-offset-2 transition-colors hover:text-crimson"
+    <ul class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+        {menu.items.map((item, index) => (
+            <li
+                class="menu-item group relative flex flex-col overflow-hidden rounded-md border border-gold/50 bg-white shadow-sm"
+                style={`--reveal-delay: ${index * 80}ms`}
             >
-                Aliño Restaurante
-            </a>
-        </p>
-    </footer>
-</div>
+                <div
+                    class="menu-card flex flex-1 cursor-pointer flex-col"
+                    role="button"
+                    tabindex="0"
+                    aria-haspopup="dialog"
+                    aria-label={`Ver detalles de ${item.name}`}
+                    data-name={item.name}
+                    data-description={item.description}
+                    data-image={item.image}
+                >
+                    <!-- <span class="absolute left-3 top-3 z-10 rounded-sm bg-crimson px-2 py-0.5 font-display text-xs tracking-[0.08em] text-cream">
+                        ★ PROMO
+                    </span> -->
+
+                    <img
+                        src={item.image}
+                        alt={item.name}
+                        loading="lazy"
+                        decoding="async"
+                        class="aspect-square w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div class="flex flex-1 flex-col gap-2 p-4 text-left">
+                        <h3 class="font-display text-base leading-snug text-velvet">
+                            {item.name}
+                        </h3>
+                        {item.description && (
+                            <p class="menu-description line-clamp-2 text-sm leading-snug text-black/70">
+                                {item.description}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </li>
+        ))}
+    </ul>
+
+    <dialog
+        class="menu-dialog m-auto w-[calc(100%-2rem)] max-w-2xl rounded-lg border-2 border-gold bg-parchment shadow-2xl backdrop:bg-black/60 sm:w-[75%] md:w-[50%]"
+        aria-labelledby="menu-dialog-title"
+        aria-describedby="menu-dialog-description"
+    >
+        <div class="relative flex flex-col">
+            <button
+                type="button"
+                class="menu-dialog-close cursor-pointer hover:bg-gray-400 absolute top-3 right-3 z-10 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-velvet shadow transition-colors hover:text-crimson"
+                aria-label="Cerrar"
+            >
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="M18 6 6 18"></path>
+                    <path d="m6 6 12 12"></path>
+                </svg>
+            </button>
+
+            <img
+                id="menu-dialog-image"
+                src=""
+                alt=""
+                class="aspect-square w-full object-cover"
+            />
+
+            <div class="flex flex-col gap-3 p-6 text-left">
+                <h3
+                    id="menu-dialog-title"
+                    class="font-display text-xl leading-snug text-velvet"
+                ></h3>
+                <p
+                    id="menu-dialog-description"
+                    class="text-base leading-relaxed text-black/80"
+                ></p>
+            </div>
+        </div>
+    </dialog>
+</section>
 
 <style>
     .menu-item {
@@ -125,7 +111,10 @@ const formatPrice = (value: number) => `$ ${value.toFixed(2)}`;
         transform: translateY(24px);
         transition:
             opacity 0.6s ease var(--reveal-delay, 0ms),
-            transform 0.6s ease var(--reveal-delay, 0ms);
+            transform 0.6s ease var(--reveal-delay, 0ms),
+            scale 0.3s ease,
+            box-shadow 0.3s ease,
+            border-color 0.3s ease;
     }
 
     .menu-item.is-visible {
@@ -133,10 +122,71 @@ const formatPrice = (value: number) => `$ ${value.toFixed(2)}`;
         transform: translateY(0);
     }
 
+    .menu-item:hover {
+        scale: 1.03;
+        box-shadow:
+            0 10px 25px -5px rgba(0, 0, 0, 0.1),
+            0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        border-color: rgba(166, 31, 31, 0.6);
+    }
+
+    .menu-description {
+        opacity: 0.85;
+        transition: opacity 0.3s ease;
+    }
+
+    .menu-card:hover .menu-description {
+        opacity: 1;
+    }
+
+    .menu-dialog::backdrop {
+        background: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        transition: opacity 0.3s ease allow-discrete;
+    }
+
+    .menu-dialog[open]::backdrop {
+        opacity: 1;
+    }
+
+    .menu-dialog {
+        position: fixed;
+        inset: 0;
+        opacity: 0;
+        transform: scale(0.96) translateY(16px);
+        transition:
+            opacity 0.3s ease,
+            transform 0.3s ease,
+            overlay 0.3s ease allow-discrete,
+            display 0.3s ease allow-discrete;
+    }
+
+    .menu-dialog[open] {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+    @starting-style {
+        .menu-dialog[open] {
+            opacity: 0;
+            transform: scale(0.96) translateY(16px);
+        }
+    }
+
     @media (prefers-reduced-motion: reduce) {
         .menu-item {
             opacity: 1;
             transform: none;
+            transition: none;
+        }
+
+        .menu-description {
+            opacity: 1;
+            transition: none;
+        }
+
+        .menu-dialog,
+        .menu-dialog::backdrop {
             transition: none;
         }
     }
@@ -164,5 +214,55 @@ const formatPrice = (value: number) => `$ ${value.toFixed(2)}`;
         );
 
         items.forEach((item) => observer.observe(item));
+    }
+
+    const dialog = document.querySelector<HTMLDialogElement>(".menu-dialog");
+    const dialogImage =
+        document.querySelector<HTMLImageElement>("#menu-dialog-image");
+    const dialogTitle =
+        document.querySelector<HTMLElement>("#menu-dialog-title");
+    const dialogDescription = document.querySelector<HTMLElement>(
+        "#menu-dialog-description",
+    );
+    const dialogClose =
+        document.querySelector<HTMLButtonElement>(".menu-dialog-close");
+
+    if (dialog && dialogImage && dialogTitle && dialogDescription) {
+        function openDialog(card: HTMLElement) {
+            const name = card.dataset.name ?? "";
+            const description = card.dataset.description ?? "";
+            const image = card.dataset.image ?? "";
+
+            dialogImage.src = image;
+            dialogImage.alt = name;
+            dialogTitle.textContent = name;
+            dialogDescription.innerHTML = description;
+
+            dialog.showModal();
+        }
+
+        document.querySelectorAll<HTMLElement>(".menu-card").forEach((card) => {
+            card.addEventListener("click", () => openDialog(card));
+            card.addEventListener("keydown", (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    openDialog(card);
+                }
+            });
+        });
+
+        dialogClose?.addEventListener("click", () => dialog.close());
+
+        dialog.addEventListener("click", (event) => {
+            const rect = dialog.getBoundingClientRect();
+            const isInDialog =
+                event.clientX >= rect.left &&
+                event.clientX <= rect.right &&
+                event.clientY >= rect.top &&
+                event.clientY <= rect.bottom;
+            if (!isInDialog) {
+                dialog.close();
+            }
+        });
     }
 </script>

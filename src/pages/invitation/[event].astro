@@ -9,6 +9,7 @@ import Disclaimer from "../../components/Disclaimer.astro";
 import Location from "../../components/Location.astro";
 import FadeInText from "@astroanimate/core/FadeInText";
 import { events } from "../../data/events";
+import Menu from "../../components/Menu.astro";
 
 export const getStaticPaths = (() => {
     return events.map((event) => ({
@@ -82,24 +83,7 @@ const displayDate = new Intl.DateTimeFormat("es", {
 
         {event.hasMenu && (
             <FadeInText enhance duration={0.7} yOffset={30} delay={0.28}>
-                <section
-                    class="card mx-auto mt-12 max-w-170 p-[clamp(1.5rem,4vw,2.5rem)] text-center"
-                    aria-labelledby="menu-heading"
-                >
-                    <h2 id="menu-heading" class="font-display text-gold">
-                        El menú
-                    </h2>
-                    <p class="mx-auto mt-3 max-w-[52ch] text-[1.15rem] leading-[1.6] text-black">
-                        Descubre la carta de Aliño Restaurante, que estará
-                        disponible durante la celebración.
-                    </p>
-                    <a
-                        href="/menu"
-                        class="mt-6 inline-block rounded-sm border-0 bg-velvet px-8 py-3 font-display tracking-[0.06em] text-cream transition-colors duration-200 hover:bg-crimson text-center"
-                    >
-                        Ver menú
-                    </a>
-                </section>
+                <Menu />
             </FadeInText>
         )}
 

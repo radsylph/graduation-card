@@ -27,7 +27,7 @@ export const events: Event[] = [
   },
   {
     slug: "friends",
-    dateTime: "2026-10-11T18:00:00-04:00",
+    dateTime: "2026-10-17T18:00:00-04:00",
     timeLabel: "6:00 p. m. – 8:00 p. m.",
     venueName: "Aliño Restaurante",
     address: ["Av. Fuerzas Armadas, Padel, Maracaibo"],
